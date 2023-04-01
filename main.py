@@ -2,78 +2,49 @@ import flet as ft
 
 
 def main(page: ft.Page):
-    page.title = "AlertDialog examples"
+    # the title of the app
+    page.title = "Flet Counter App"
 
-    #page.dark_theme = ft.theme.Theme(color_scheme_seed="orange")
-    #page.theme_mode = ft.ThemeMode.DARK
+    # a light/bright theme
+    page.theme_mode = "light"
 
-    dlg = ft.AlertDialog(
-        title=ft.Text("Hello, you!"), on_dismiss=lambda e: print("Dialog dismissed!")
-    )
+    # use material 2 design theme | this is just to better mimic the Flutter example
+    page.theme = ft.Theme(use_material3=False)
 
-    def close_dlg(e):
-        dlg_modal.open = False
+    # the page's alignment
+    page.horizontal_alignment = "center"
+    page.vertical_alignment = "center"
+
+    def increment_counter(e):
+        """Increment the value of the counter_text object by 1, and update the UI to reflect these changes."""
+        counter_text.value = str(int(counter_text.value) + 1)
         page.update()
 
-    scoreBtn = ft.ElevatedButton(content=ft.Text(value="120 Points", size=25),
-                                 height=200,
-                                 style=ft.ButtonStyle(shape=ft.CircleBorder()
-                                                      ),
-                                 )
-
-    goBackBtn = ft.ElevatedButton(content=ft.Text(value="Go Back", size=25),
-                                  bgcolor=ft.colors.RED, color=ft.colors.BLACK,
-                                  height=160, width=110, style=ft.ButtonStyle(
-        shape={
-            ft.MaterialState.DEFAULT: ft.CountinuosRectangleBorder(radius=0)}
-    ))
-
-    continueBtn = ft.ElevatedButton(content=ft.Text(value="Continue", size=25),
-                                    bgcolor=ft.colors.GREEN, color=ft.colors.BLACK,
-                                    height=160, width=450,
-                                    style=ft.ButtonStyle(
-        shape={
-            ft.MaterialState.DEFAULT: ft.CountinuosRectangleBorder(radius=0)}
-    )
+    # the app's appbar
+    page.appbar = ft.AppBar(
+        title=ft.Text("Flet Demo Home Page", color=ft.colors.WHITE),  # a title of white color
+        bgcolor=ft.colors.BLUE,  # a blue background color
+        center_title=True  # center the title || without this, the title will be on the left
     )
 
-    dlg_modal = ft.AlertDialog(
-        content=ft.Container(
-            ft.Column(controls=[scoreBtn,
-                                ft.Row(controls=[goBackBtn,
-                                                 continueBtn], spacing=0
-                                       )],
-                      horizontal_alignment="CENTER",
-                      alignment="END",
-                      spacing=100
-                      ),
-            padding=0,
-            width=670,
-            height=500,
-            bgcolor=ft.colors.TRANSPARENT
+    # text that contains the counter number to be incremented
+    counter_text = ft.Text("0", style=ft.TextThemeStyle.DISPLAY_MEDIUM)
 
-        ),
-        open=False,
-        modal=True,
-        content_padding=0,
-        shape = ft.CountinuosRectangleBorder(radius=0),
-        actions_padding=0
+    # the app's FAB
+    page.floating_action_button = ft.FloatingActionButton(
+        content=ft.Icon(ft.icons.ADD, color=ft.colors.WHITE),
+        shape=ft.CircleBorder(),  # gives the button a round/circle shape
+        on_click=increment_counter,  # the callback to be executed when this button is clicked
+        tooltip="Increment",  # the text to be shown when this button is hovered
+        bgcolor=ft.colors.BLUE  # a blue background color
     )
 
-    def open_dlg(e):
-        page.dialog = dlg
-        dlg.open = True
-        page.update()
-
-    def open_dlg_modal(e):
-        page.dialog = dlg_modal
-        dlg_modal.open = True
-        page.update()
-
+    # adding our widgets/controls to the page/UI
     page.add(
-        ft.ElevatedButton("Open dialog", on_click=open_dlg),
-        ft.ElevatedButton("Open modal dialog", on_click=open_dlg_modal),
+        ft.Text("You have pushed the button this many times:"),
+        counter_text
     )
 
 
-ft.app(target=main)
+# open a browser tab containing the app | remove the view parameter to open in a native OS window
+ft.app(target=main, view=ft.WEB_BROWSER)
